@@ -7,14 +7,14 @@ var slash, cwd, Mocha, Runner, env, is;
 if (typeof document === 'undefined') {
   is     = { node: true };
   slash  = require('path').sep || '/';
-  cwd    = process.cwd() + slash;
+  cwd    = process.cwd();
   Mocha  = require('mocha');
   Runner = Mocha.Runner;
   env    = function () { return process.env; };
 } else {
   is     = { browser: true };
   slash  = '/';
-  cwd    = location.href.replace(/\/[^\/]*$/, '/');
+  cwd    = location.href.replace(/\/[^\/]*$/, '');
   Mocha  = this.Mocha;
   Runner = Mocha.Runner;
   env    = function () { return {}; };
