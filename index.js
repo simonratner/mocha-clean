@@ -33,8 +33,14 @@ if (is.browser && mocha && !mocha.traceIgnores)
 
 var old = Runner.prototype.fail;
 Runner.prototype.fail = function (test, err) {
-  err = __mocha_internal__cleanError(err);
-  return old.call(this, test, err);
+  var fullStackTrace = this.fullStackTrace;
+  if (!fullStackTrace) {
+    err = __mocha_internal__cleanError(err);
+  }
+  this.fullStackTrace = true;
+  var res = old.call(this, test, err);
+  this.fullStackTrace = fullStackTrace;
+  return res;
 };
 
 /*
