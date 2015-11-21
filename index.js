@@ -50,6 +50,7 @@ Runner.prototype.fail = function (test, err) {
 function __mocha_internal__cleanError (e) {
   if (!e.stack) return e;
   var stack = e.stack.split('\n');
+  var prev = false;
 
   stack = stack.reduce(function (list, line) {
     // Strip out certain lines.
@@ -73,10 +74,22 @@ function __mocha_internal__cleanError (e) {
     if (env().FILENAMES_FIRST)
       line = reorderFilename(line);
 
+    if (line.match(/^From previous event/)) {
+      if (prev) {
+        return list;
+      } else {
+        prev = true;
+      }
+    } else {
+      prev = false;
+    }
     list.push(line);
     return list;
   }, []);
 
+  if (prev) {
+    stack.pop();
+  }
   e.stack = stack.join('\n');
   return e;
 }
